@@ -21,6 +21,7 @@ class WandBIntegration:
         self.tm = training_manager
         self.log_checkpoints = log_checkpoints
         self.log_artifacts = log_artifacts
+        self._wandb_initialized = False
         
         # Initialize W&B
         self._init_wandb(wandb_project, wandb_entity)
@@ -28,6 +29,7 @@ class WandBIntegration:
     def _init_wandb(self, project: str, entity: Optional[str] = None):
         """Initialize Weights & Biases"""
         wandb.init(project=project, entity=entity)
+        self._wandb_initialized = True
         
         # Log hyperparameters
         if self.tm.hyperparams:
@@ -38,6 +40,9 @@ class WandBIntegration:
     
     def log_metrics(self, metrics: Dict[str, float], epoch: Optional[int] = None):
         """Log metrics to W&B"""
+        if not self._wandb_initialized or wandb.run is None:
+            return
+            
         if epoch is not None:
             metrics['epoch'] = epoch
         
@@ -64,7 +69,7 @@ class WandBIntegration:
         self.log_metrics(metrics, epoch)
         
         # Log checkpoints as artifacts if requested
-        if self.log_artifacts:
+        if self.log_artifacts and self._wandb_initialized and wandb.run is not None:
             for checkpoint_type, path in saved_paths.items():
                 if 'best' in checkpoint_type or force_save:
                     artifact = wandb.Artifact(
@@ -79,6 +84,9 @@ class WandBIntegration:
     
     def log_training_status(self):
         """Log current training status to W&B"""
+        if not self._wandb_initialized or wandb.run is None:
+            return
+            
         status = self.tm.get_training_status()
         
         # Log as summary statistics
@@ -89,8 +97,10 @@ class WandBIntegration:
     
     def finish(self):
         """Finish W&B run and log final status"""
-        self.log_training_status()
-        wandb.finish()
+        if self._wandb_initialized and wandb.run is not None:
+            self.log_training_status()
+            wandb.finish()
+            self._wandb_initialized = False
 
 # Convenience function for quick W&B setup
 def setup_wandb_training(model: nn.Module,

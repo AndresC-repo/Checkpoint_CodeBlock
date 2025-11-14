@@ -59,7 +59,7 @@ def main():
     print(f"📈 Training status: Can resume = {status['can_resume']}")
     
     # Training loop
-    total_epochs = 3  # Small number for demo
+    total_epochs = 10  # Small number for demo
     
     print(f"\n🎯 Training for {total_epochs} epochs with W&B logging...")
     for epoch in tqdm(range(tm.current_epoch, total_epochs)):
@@ -183,8 +183,6 @@ def main():
     print("\n" + "="*60)
     print("🎉 Checkpoint_CodeBlock W&B Integration Demo Completed!")
     print("="*60)
-    print("\n📊 Check your W&B dashboard at: https://wandb.ai/your-username/checkpoint_codeblock_demo")
-    print("   (Replace 'your-username' with your actual W&B username)")
 
 if __name__ == "__main__":
     main()
