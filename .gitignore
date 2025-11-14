@@ -1,0 +1,13 @@
+data/
+checkpoints/
+logs/
+*.pyc
+__pycache__/
+.vscode/
+env/
+venv/
+.idea/
+.DS_Store
+.ipynb_checkpoints/
+*.log
+wandb/

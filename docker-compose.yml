@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  checkpoint-demo:
+    build: .
+    container_name: checkpoint_codeblock_demo
+    volumes:
+      - ./checkpoints:/app/mnist_experiment  # Persist checkpoints
+      - ./data:/app/data  # Persist MNIST data
+      - .:/app  # Mount current directory for live code changes
+    environment:
+      - PYTHONPATH=/app
+    stdin_open: true  # Keep STDIN open
+    tty: true        # Allocate pseudo-TTY
+    command: tail -f /dev/null  # Keep container running
