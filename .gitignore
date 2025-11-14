@@ -11,3 +11,7 @@ venv/
 .ipynb_checkpoints/
 *.log
 wandb/
+
+mnist/
+mnist_experiment/
+mnist_wandb_experiment/
